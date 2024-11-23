@@ -34,6 +34,7 @@ dependencies:
   readsms: ^0.2.0+4
   permission_handler: ^11.3.1
   flutter_sms_inbox: ^1.0.3
+  pie_chart: ^5.4.0
 
 
   # The following adds the Cupertino Icons font to your application.
