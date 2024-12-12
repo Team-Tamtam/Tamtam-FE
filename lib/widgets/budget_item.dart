@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 class BudgetItemCard extends StatelessWidget {
   final String title;
-  final int amount;
+  final amount;
   final IconData icon;
 
   const BudgetItemCard({
@@ -35,12 +35,12 @@ class BudgetItemCard extends StatelessWidget {
                   children: [
                     Text(title, style: Theme.of(context).textTheme.bodyMedium),
 
-                    Text('${amount}원', style: TextStyle(color: Colors.teal)),
+                    Text('${amount.toInt()}원', style: TextStyle(color: Colors.teal)),
                   ],
                 ),
               ),
               SizedBox(width: 3),
-              Icon(Icons.edit, color: Colors.teal),
+              // Icon(Icons.edit, color: Colors.teal),
             ],
           ),
         ),

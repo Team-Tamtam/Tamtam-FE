@@ -37,7 +37,7 @@ class _SmsScreenState extends State<SmsScreen> {
                     )
                   : Center(
                       child: Text(
-                        'No messages to show.\nTap refresh button...',
+                        '오늘의 결제내역 sms를 보려면,\n 아래 refresh버튼을 눌러주세요!',
                         style: Theme.of(context).textTheme.headlineSmall,
                         textAlign: TextAlign.center,
                       ),
@@ -57,7 +57,7 @@ class _SmsScreenState extends State<SmsScreen> {
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.teal,
+                backgroundColor: Color(0XFF8E52F5),
                 padding: const EdgeInsets.symmetric(
                     vertical: 12.0, horizontal: 24.0),
               ),
@@ -79,7 +79,7 @@ class _SmsScreenState extends State<SmsScreen> {
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.teal,
+                backgroundColor: Color(0XFF8E52F5),
                 padding: const EdgeInsets.symmetric(
                     vertical: 12.0, horizontal: 24.0),
               ),
@@ -89,7 +89,7 @@ class _SmsScreenState extends State<SmsScreen> {
               ),
             ),
           ),
-          SizedBox(height: 50),
+          SizedBox(height: 70),
         ],
 
       ),
@@ -137,6 +137,7 @@ class _SmsScreenState extends State<SmsScreen> {
             await Permission.sms.request();
           }
         },
+        backgroundColor: Color(0XFF8E52F5),
         child: const Icon(Icons.refresh),
       ),
     );
@@ -159,11 +160,53 @@ class _MessagesListView extends StatelessWidget {
       itemBuilder: (BuildContext context, int i) {
         var message = messages[i];
 
-        return ListTile(
-          title: Text('${message.sender} [${message.date}]'),
-          subtitle: Text('${message.body}'),
+        // return
+        //   ListTile(
+        //   title: Text('[${message.date}]'),
+        //   subtitle: Text('${message.body}'),
+        //
+        //
+        // );
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Color(0xFFF0E9FF),
+              borderRadius: BorderRadius.circular(12.0),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.shade300,
+                  offset: Offset(0, 2),
+                  blurRadius: 4.0,
+                ),
+              ],
+            ),
+            padding: const EdgeInsets.all(12.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Text(
+                //   '[결제 시각 : ${message.date}]' ?? 'No Date',
+                //   style: TextStyle(
+                //     fontSize: 14,
+                //     fontWeight: FontWeight.bold,
+                //     color: Colors.teal.shade700,
+                //   ),
+                // ),
+                // const SizedBox(height: 8.0),
+                Text(
+                  message.body ?? 'No Content',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black87,
+                  ),
+                ),
+              ],
+            ),
+          ),
         );
       },
     );
   }
 }
+

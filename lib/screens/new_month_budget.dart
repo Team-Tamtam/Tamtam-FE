@@ -1,108 +1,174 @@
 import 'package:flutter/material.dart';
 
+
 class NewMonthBudgetScreen extends StatelessWidget {
-  const NewMonthBudgetScreen({Key? key}) : super(key: key);
+  final apiResponse; // API 응답 데이터
+
+  //식비를 줄일래
+  // NewMonthBudgetScreen({required this.apiResponse});
+  const NewMonthBudgetScreen({Key? key, required this.apiResponse})
+      : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    // 카테고리와 예산 데이터 (임시 데이터)
-    final List<Map<String, dynamic>> categoryData = [
-      {'category': '식비', 'amount': 200000},
-      {'category': '쇼핑', 'amount': 150000},
-      {'category': '교통', 'amount': 100000},
-      {'category': '문화', 'amount': 50000},
-    ];
+    // API 응답에서 totalAmount, categories, keySchedules를 추출
+    final totalAmount = apiResponse['budgetAmount'].toInt();
+    final List categories = apiResponse['categories'];
+    final List keySchedules = apiResponse['keySchedules'];
+    final reason = apiResponse['reason'];
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text(''),
-        backgroundColor: Color(0xFF8E52F5),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // 제목: "다음달 예산"
-            Text(
-              '다음달 예산',
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 20), // 제목과 소제목 간 간격
-
-            Center(
-              child: Text(
-                '총 예산 : 1,000,000원',
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.w500,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-            SizedBox(height: 20), // 소제목과 다음 텍스트 간 간격
-
-            // 카테고리별 예산 텍스트
-            Text(
-              '다음달 카테고리별 예산',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            // 카테고리별 예산 직사각형
-            // 카테고리별 예산 직사각형
-            GridView.builder(
-              shrinkWrap: true, // GridView가 필요한 만큼만 공간을 차지하게 설정
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, // 한 줄에 두 개씩 배치
-                crossAxisSpacing: 16, // 가로 간격
-                mainAxisSpacing: 16, // 세로 간격
-              ),
-              itemCount: categoryData.length,
-              itemBuilder: (context, index) {
-                return BudgetCard(
-                  category: categoryData[index]['category'],
-                  amount: categoryData[index]['amount'],
-                );
-              },
-            ),
-            SizedBox(height: 20),
-            Text(
-              '다음달 주요 일정',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 10),
-            Container(
-              // 화면 가로 전체
-              padding: EdgeInsets.all(16.0),
-              decoration: BoxDecoration(
-                color: Color(0xFF8E52F5), // 배경색
-                borderRadius: BorderRadius.circular(16.0), // 둥근 모서리
-              ),
-              child: Text(
-                '여행(2024.10.21 ~ 2024.10.24)',
-                style: TextStyle(
-                  fontSize: 18,
-                  color: Colors.white, // 텍스트 색상
-                ),
-                textAlign: TextAlign.center, // 텍스트 가로 중앙 정렬
-              ),
-            ),
-          ],
+        appBar: AppBar(
+          title: Text(''),
+          backgroundColor: Color(0xFF8E52F5),
         ),
-      ),
-    );
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // 제목: "다음달 예산"
+                // Text(
+                //   '다음달 예산',
+                //   style: TextStyle(
+                //     fontSize: 28,
+                //     fontWeight: FontWeight.bold,
+                //   ),
+                // ),
+                // 제목: "다음달 예산"
+                Row(
+                  children: [
+                    Text(
+                      '다음달 예산',
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(width: 8),
+                    IconButton(
+                      icon: Icon(
+                        Icons.info_outline,
+                        color: Color(0xFF8E52F5),
+                      ),
+                      onPressed: () {
+                        // 모달 띄우기
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            backgroundColor: Color(0xFFF0E9FF), // 연보라색
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16.0),
+                            ),
+                            content: SingleChildScrollView(
+                            child : Text(
+                              reason,
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black87,
+                              ),
+                            ),),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.of(context).pop(),
+                                child: Text(
+                                  '닫기',
+                                  style: TextStyle(color: Color(0xFF8E52F5)),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20), // 제목과 소제목 간 간격
+
+                // 총 예산
+                Center(
+                  child: Text(
+                    '총 예산 : ${totalAmount}원',
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                SizedBox(height: 20), // 소제목과 다음 텍스트 간 간격
+
+                // 카테고리별 예산 텍스트
+                Text(
+                  '다음달 카테고리별 예산',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+
+                // 카테고리별 예산 직사각형 (카테고리별 예산 리스트)
+                GridView.builder(
+                  shrinkWrap: true,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 13,
+                    mainAxisSpacing: 13,
+                  ),
+                  itemCount: categories.length,
+                  itemBuilder: (context, index) {
+                    return BudgetCard(
+                      category: categories[index]['categoryName'],
+                      amount:
+                          (categories[index]['categoryBudgetAmount'].toInt()),
+                      // 문자열을 정수로 변환
+                    );
+                  },
+                ),
+                SizedBox(height: 20),
+                Text(
+                  '다음달 주요 일정',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 10),
+
+                // 주요 일정 리스트
+                SizedBox(height: 10),
+                Column(
+                  children: keySchedules.map<Widget>((schedule) {
+                    return Container(
+                      margin: EdgeInsets.only(bottom: 10),
+                      padding: EdgeInsets.all(16.0),
+                      decoration: BoxDecoration(
+                        color: Color(0xFF8E52F5), // 배경색
+                        borderRadius: BorderRadius.circular(16.0),
+                      ),
+                      child: Text(
+                        '${schedule['title']}(${schedule['startDateTime']})',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ],
+            ),
+          ),
+        ));
   }
 }
 
 class BudgetCard extends StatelessWidget {
   final String category;
-  final int amount;
+  final amount;
 
   BudgetCard({required this.category, required this.amount});
 
@@ -114,7 +180,7 @@ class BudgetCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(12), // 카드 모서리 둥글게
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(9.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -122,7 +188,7 @@ class BudgetCard extends StatelessWidget {
             Text(
               category,
               style: TextStyle(
-                fontSize: 18,
+                fontSize: 17,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -130,7 +196,7 @@ class BudgetCard extends StatelessWidget {
             Text(
               '${amount}원',
               style: TextStyle(
-                fontSize: 20,
+                fontSize: 16,
                 fontWeight: FontWeight.w500,
                 color: Colors.blue,
               ),
